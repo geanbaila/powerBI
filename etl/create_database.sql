@@ -1,6 +1,6 @@
 
 create table dim_agencia(
-    dim_agencia_id int identity(1,1) primary key, 
+    dim_agencia_id int not null auto_increment primary key, 
     agencia_id int,
     agencia_codigo varchar(200),
     agencia_nombre varchar(200),
@@ -11,7 +11,7 @@ create table dim_agencia(
 ); 
 
 create table dim_empleado(
-    dim_empleado_id int identity(1,1) primary key,
+    dim_empleado_id int not null auto_increment primary key,
     agencia_id int,
     agencia_codigo varchar(200),
     agencia_nombre varchar(200),
@@ -27,7 +27,7 @@ create table dim_empleado(
 
 
 create table dim_cliente(
-    dim_cliente_id int identity(1,1) primary key,
+    dim_cliente_id int not null auto_increment primary key,
     cliente_id int,
     cuenta_id int,
     cliente_aval varchar(200),
@@ -81,7 +81,7 @@ create table dim_cliente(
 
 
 create table dim_cliente_empresa(
-    dim_cliente_empresa_id int identity(1,1) primary key,
+    dim_cliente_empresa_id int not null auto_increment primary key,
     empresa_id int,
     cliente_empresa_email varchar(200),
     cliente_empresa_ruc varchar(200),
@@ -107,7 +107,7 @@ create table dim_cliente_empresa(
 
 
 create table dim_producto_credito(
-    dim_producto_credito_id int identity(1,1) primary key,
+    dim_producto_credito_id int not null auto_increment primary key,
     cuenta_id int,
     cuenta_producto varchar(200),
     cuenta_tipo_producto varchar(200),
@@ -161,7 +161,7 @@ create table dim_producto_credito(
 ); 
  
 create table dim_tiempo(
-    dim_tiempo_id int identity(1,1) primary key,
+    dim_tiempo_id int not null auto_increment primary key,
     cuenta_id int,
     fecha varchar(20),
     anio varchar(20),
@@ -170,14 +170,14 @@ create table dim_tiempo(
 ); 
 
 create table fact_credito_otorgado(
-    fact_credito_otorgado_id int identity(1,1) primary key,
-    dim_agencia_id int FOREIGN KEY REFERENCES dim_agencia (dim_agencia_id),
-    dim_empleado_id int FOREIGN KEY REFERENCES dim_empleado (dim_empleado_id),
-    dim_tiempo_id int FOREIGN KEY REFERENCES dim_tiempo (dim_tiempo_id), -- fechas de desembolso
-    dim_cliente_id int FOREIGN KEY REFERENCES dim_cliente (dim_cliente_id),
-    dim_cliente_empresa_id int FOREIGN KEY REFERENCES dim_cliente_empresa (dim_cliente_empresa_id),
-    dim_producto_credito_id int FOREIGN KEY REFERENCES dim_producto_credito (dim_producto_credito_id),
-    empleado_agencia_id int FOREIGN KEY REFERENCES dim_agencia (dim_agencia_id), -- agencia en donde labora el empleado
+    fact_credito_otorgado_id int not null auto_increment primary key,
+    dim_agencia_id int,
+    dim_empleado_id int,
+    dim_tiempo_id int,
+    dim_cliente_id int,
+    dim_cliente_empresa_id int,
+    dim_producto_credito_id int,
+    empleado_agencia_id int,
     cliente_id int,
     cuenta_id int,
     cuenta_fecha_desembolso Date,
@@ -192,5 +192,12 @@ create table fact_credito_otorgado(
     cuenta_periodo varchar(100),
     cuenta_modalidad_pago varchar(100),
     cuenta_tea varchar(100),
-    cuenta_tea_mora varchar(100)
+    cuenta_tea_mora varchar(100),
+    FOREIGN KEY (dim_agencia_id) REFERENCES dim_agencia (dim_agencia_id) ,
+    FOREIGN KEY (dim_empleado_id) REFERENCES dim_empleado (dim_empleado_id) ,
+    FOREIGN KEY (dim_tiempo_id) REFERENCES dim_tiempo (dim_tiempo_id) , -- fechas de desembolso
+    FOREIGN KEY (dim_cliente_id) REFERENCES dim_cliente (dim_cliente_id) ,
+    FOREIGN KEY (dim_cliente_empresa_id) REFERENCES dim_cliente_empresa (dim_cliente_empresa_id) ,
+    FOREIGN KEY (dim_producto_credito_id) REFERENCES dim_producto_credito (dim_producto_credito_id) ,
+    FOREIGN KEY (dim_agencia_id) REFERENCES dim_agencia (dim_agencia_id)  -- agencia en donde labora el empleado
 ); 
